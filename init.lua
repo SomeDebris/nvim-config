@@ -267,7 +267,8 @@ local lsps = {
             settings = {}
         }, --]=]
     },
-    { "awk-language-server",
+    {
+        "awk-language-server",
         {
             cmd = { 'awk-language-server' },
             filetypes = { 'awk' },
