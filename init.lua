@@ -228,7 +228,7 @@ local lsps = {
     { "ltex" },
     {
         "julials",
-        {
+        --[=[{
             cmd = {
                 "julia",
                 "--project=".."~/.julia/environments/lsp/",
@@ -265,7 +265,7 @@ local lsps = {
             filetypes = { 'julia' },
             root_markers = { "Project.toml", "JuliaProject.toml" },
             settings = {}
-        },
+        }, --]=]
     },
     -- { "awk-language-server" },
     {
