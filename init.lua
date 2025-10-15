@@ -194,7 +194,9 @@ require("lazy").setup({
       -- tag = "v2.15", -- uncomment to pin to a specific release
       init = function()
         -- VimTeX configuration goes here, e.g.
+        -- vim.cmd[[set conceallevel=2]]
         vim.g.vimtex_view_method = "sioyek"
+        vim.g.vimtex_compiler_method = "latexmk"
       end
     },
     {
@@ -203,6 +205,16 @@ require("lazy").setup({
       branch = 'main',
       build = ':TSUpdate'
     },
+    {
+      "kiyoon/jupynium.nvim",
+      -- build = "pip3 install --user .",
+      build = "uv pip install . --python=$HOME/.virtualenvs/jupynium/bin/python",
+      -- build = "conda run --no-capture-output -n jupynium pip install .",
+      -- python_host = { "uv", "run", "--python=$HOME/.virtualenvs/jupynium/bin/python python", "python" },
+      -- jupyter_command = { "uv", "run", "jupyter" },
+    },
+    -- "rcarriga/nvim-notify",   -- optional
+    -- "stevearc/dressing.nvim", -- optional, UI for :JupyniumKernelSelect
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
@@ -234,7 +246,8 @@ local lsps = {
     { "fortls" },
     { "pyright" },
     { "gopls" },
-    { "ltex" },
+    { "texlab" },
+    { "ltex_plus" },
     {
         "julials",
         --[=[{
@@ -312,3 +325,7 @@ for _, lsp in pairs(lsps) do
     end
 end
 
+require("jupynium").setup({
+    python_host = { "uv", "run", "--python=" .. vim.env.HOME .. "/.virtualenvs/jupynium/bin/python", "python" },
+    jupyter_command = { "uv", "run", "jupyter" },
+})
