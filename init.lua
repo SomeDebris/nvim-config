@@ -19,13 +19,11 @@ vim.o.number = true
 -- Sync clipboard between OS and Neovim. Schedule the setting after `UiEnter` because it can
 -- increase startup-time. Remove this option if you want your OS clipboard to remain independent.
 -- See `:help 'clipboard'`
---[[
-vim.api.nvim_create_autocmd('UIEnter', {
-  callback = function()
-    vim.o.clipboard = 'unnamedplus'
-  end,
-})
---]]
+-- vim.api.nvim_create_autocmd('UIEnter', {
+--   callback = function()
+--     vim.o.clipboard = 'unnamedplus'
+--   end,
+-- })
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true
@@ -37,8 +35,15 @@ vim.o.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
 
+-- When reaching the end of an on-screen line whose width is larger than that
+-- of the terminal window, scroll this many characters to the right.
+vim.o.sidescroll = 10
+
 -- Show <tab> and trailing spaces
 vim.o.list = true
+-- Indicate that a line has preceding characters with "<"
+-- Indicate that a line has following characters with ">"
+vim.opt.listchars:append({precedes = "<", extends = ">"})
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s) See `:help 'confirm'`
@@ -98,7 +103,7 @@ vim.cmd('packadd! nohlsearch')
 
 -- my stuff:
 vim.o.wrap = false
-vim.o.background = 'dark'
+vim.o.background = "dark"
 vim.o.path = "**"
 vim.o.signcolumn = "number"
 
@@ -111,7 +116,7 @@ vim.o.expandtab = true
 vim.keymap.set("n", "<leader><space>", vim.diagnostic.open_float)
 
 -- Want to accept code suggestions:
-vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
 
 -- vim.cmd([[colorscheme vim]])
 
@@ -173,6 +178,7 @@ require("lazy").setup({
     { 'mason-org/mason.nvim' },
     { 'rebelot/kanagawa.nvim' },
     { 'neovim/nvim-lspconfig' },
+    { 'tpope/vim-jdaddy' },
     -- { 'glacambre/firenvim', build = ":call firenvim#install(0)" },
     {
       'nvim-orgmode/orgmode',
@@ -245,50 +251,12 @@ local lsps = {
     { "rust_analyzer" },
     { "fortls" },
     { "pyright" },
-    { "gopls" },
-    { "texlab" },
     { "ltex_plus" },
-    {
-        "julials",
-        --[=[{
-            cmd = {
-                "julia",
-                "--project=".."~/.julia/environments/lsp/",
-                "--startup-file=no",
-                "--history-file=no",
-                "-e", [[
-                using Pkg
-                Pkg.instantiate()
-                using LanguageServer, SymbolServer
-                depot_path = get(ENV, "JULIA_DEPOT_PATH", "")
-                project_path = let
-                    dirname(something(
-                        ## 1. Finds an explicitly set project (JULIA_PROJECT)
-                        Base.load_path_expand((
-                            p = get(ENV, "JULIA_PROJECT", nothing);
-                                p === nothing ? nothing : isempty(p) ? nothing : p
-                            )),
-                        ## 2. Look for a Project.toml file in the current working directory,
-                        ##    or parent directories, with $HOME as an upper boundary
-                        Base.current_project(),
-                        ## 3. First entry in the load path
-                        get(Base.load_path(), 1, nothing),
-                        ## 4. Fallback to default global environment,
-                        ##    this is more or less unreachable
-                        Base.load_path_expand("@v#.#"),
-                        ))
-                    end
-                @info "Running language server" VERSION pwd() project_path depot_path
-                server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)
-                server.runlinter = true
-                run(server)
-                ]]
-            },
-            filetypes = { 'julia' },
-            root_markers = { "Project.toml", "JuliaProject.toml" },
-            settings = {}
-        }, --]=]
-    },
+    { "awk-language-server" },
+    { "texlab" },
+    { "gopls" },
+    { "julials" },
+    { "matlab-language-server" },
     {
         "awk-language-server",
         {
