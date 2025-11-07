@@ -203,6 +203,15 @@ require("lazy").setup({
         -- vim.cmd[[set conceallevel=2]]
         vim.g.vimtex_view_method = "sioyek"
         vim.g.vimtex_compiler_method = "latexmk"
+        vim.g.vimtex_compiler_latexmk = {
+          options = {
+            [[-verbose]],
+            [[-shell-escape]],
+            [[-file-line-error]],
+            [[-synctex=1]],
+            [[-interaction=nonstopmode]],
+          }
+        }
       end
     },
     {
@@ -247,6 +256,8 @@ end
 
 require("mason").setup()
 
+local julia_ls_script = vim.fs.joinpath(vim.fn.stdpath('config'), "helpers", "julia_languageserver.jl")
+
 local lsps = {
     { "rust_analyzer" },
     { "fortls" },
@@ -255,7 +266,18 @@ local lsps = {
     { "awk-language-server" },
     { "texlab" },
     { "gopls" },
-    { "julials" },
+    {
+        "julials",
+        {
+            cmd = {"julia", "--startup-file=no", "--history-file=no", julia_ls_script},
+            single_file_support = true,
+            on_attach = function(client, bufnr)
+                -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
+                vim.bo[bufnr].formatexpr = ''
+            end,
+        capabilities = capabilities,
+        }
+    },
     { "matlab-language-server" },
     {
         "awk-language-server",
