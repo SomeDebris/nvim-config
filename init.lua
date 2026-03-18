@@ -230,6 +230,7 @@ require("lazy").setup({
     },
     -- "rcarriga/nvim-notify",   -- optional
     -- "stevearc/dressing.nvim", -- optional, UI for :JupyniumKernelSelect
+    { "ludovicchabant/vim-gutentags" },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
@@ -278,7 +279,26 @@ local lsps = {
         capabilities = capabilities,
         }
     },
-    { "matlab-language-server" },
+    -- {
+    --     "jetls",
+    --     {
+    --         cmd = {
+    --             "jetls",
+    --             "serve",
+    --         },
+    --         filetypes = { "julia" },
+    --         root_markers = { "Project.toml" }
+    --     }
+    -- },
+    { "matlab_ls",
+	{
+	    settings = {
+                MATLAB = {
+	            installPath='/home/magnus/.local/MATLAB/R2025b',
+                },
+            },
+        },
+    },
     {
         "awk-language-server",
         {
