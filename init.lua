@@ -93,6 +93,7 @@ vim.api.nvim_create_user_command('Gcom', function(opts)
   vim.cmd('Git commit -m ' .. opts.fargs[1])
 end, { desc = 'Shorthand for `:Git add % | Git commit -m`', nargs = 1 })
 
+
 -- [[ Add optional packages ]]
 -- Nvim comes bundled with a set of packages that are not enabled by
 -- default. You can enable any of them by using the `:packadd` command.
@@ -100,6 +101,7 @@ end, { desc = 'Shorthand for `:Git add % | Git commit -m`', nargs = 1 })
 -- For example, to add the "nohlsearch" package to automatically turn off search highlighting after
 -- 'updatetime' and when going to insert mode
 vim.cmd('packadd! nohlsearch')
+vim.cmd('packadd! termdebug')
 
 -- my stuff:
 vim.o.wrap = false
@@ -215,6 +217,15 @@ require("lazy").setup({
       end
     },
     {
+        'nvim-telescope/telescope.nvim', version = '*',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            -- optional but recommended
+            'BurntSushi/ripgrep',
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        }
+    },
+    {
       'nvim-treesitter/nvim-treesitter',
       lazy = false,
       branch = 'main',
@@ -243,6 +254,19 @@ require("lazy").setup({
     notify = false
   },
 })
+
+-- Telescope usage stuff:
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+
+-- treesitter syntax highlighting enable when enter buffer
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = { 'julia' },
+--   callback = function() vim.treesitter.start() end,
+-- })
 
 -- select a colorscheme
 if vim.g.started_by_firenvim == true then
@@ -317,14 +341,14 @@ local lsps = {
     },
     {
         "clangd",
-        {
-            init_options = {
-                -- im using this standard since i want the compiler to
-                -- know about true, false, etc - see
-                -- https://xnacly.me/posts/2025/clangd-lsp/
-                fallbackFlags = { '--std=c23' }
-            },
-        }
+        -- {
+        --     -- init_options = {
+        --     --     -- im using this standard since i want the compiler to
+        --     --     -- know about true, false, etc - see
+        --     --     -- https://xnacly.me/posts/2025/clangd-lsp/
+        --     --     -- fallbackFlags = { '--std=gnu++17' }
+        --     -- },
+        -- }
     },
 }
 for _, lsp in pairs(lsps) do
